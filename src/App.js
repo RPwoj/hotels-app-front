@@ -2,7 +2,6 @@ import logo from './logo.svg';
 import './App.css';
 import Home from './pages/Home.js';
 import About from './pages/About.js';
-import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Routes, Route } from "react-router";
 
 function App() {

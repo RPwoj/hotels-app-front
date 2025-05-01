@@ -1,13 +1,11 @@
-import { getHotels } from "../api/HotelApi.js";
-import { useState, useEffect } from 'react';
-
-console.log(getHotels());
+import HotelsList from "../components/HotelsList.js";
 
 function Home() {
   return (
     <div className="App">
       <header className="App-header">
         <h1>Home page</h1>
+        <HotelsList />
       </header>
     </div>
   );
