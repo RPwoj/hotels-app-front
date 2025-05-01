@@ -1,7 +1,17 @@
-.row {
-    display: flex;
+.hotels-list {
+    max-width: 900px;
+    margin: 0 auto;
 }
 
-.col {
-    background: red;
+.hotels-list-el {
+    background: #f9f9f9;
+}
+
+.label {
+    background: #495546;
+    padding: .15rem .75rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #ffffff;
 }
