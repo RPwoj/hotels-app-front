@@ -8,6 +8,6 @@ export async function getHotels() {
       return res.data.member;
     } catch (err) {
       console.error(err);
-      return null; // or handle it however you want
+      return null;
     }
   }

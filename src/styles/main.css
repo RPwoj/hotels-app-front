@@ -7,6 +7,10 @@
     background: #f9f9f9;
 }
 
+
+
+/*  */
+
 .label {
     background: #495546;
     padding: .15rem .75rem;
@@ -14,4 +18,32 @@
     font-size: 0.8rem;
     font-weight: 700;
     color: #ffffff;
+}
+
+
+
+/*  */
+
+.edit-form-holder {
+    opacity: 0;
+    visibility: hidden;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .3s ease, opacity .3s ease, visibility .3s ease;
+}
+
+.edit-form-expanded {
+    opacity: 1 !important;
+    visibility: visible;
+    max-height: 500px;
+}
+
+
+
+/*  */
+
+.img-placeholder {
+    width: 7.5rem;
+    aspect-ratio: 1;
+    background: #707070;
 }

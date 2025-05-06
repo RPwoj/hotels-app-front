@@ -1,6 +1,6 @@
 function Label(props) {
     return (
-        <span class="label">{props.text}</span>
+        <span className="label">{props.text}</span>
     )
 }
 
