@@ -2,7 +2,29 @@ import { getHotels } from "../api/HotelApi.js";
 import { useState, useEffect } from 'react';
 import Label from "./Label.js";
 import Button from "./Button.js";
+import FormHotel from "./FormHotel.js";
+import { getHotelInfo } from "../api/HotelApi.js";
+import { createRoot } from 'react-dom/client';
 
+async function editHotel(e) {
+  const listEl = e.target.closest('.hotels-list-el');
+  const hotelId = listEl.getAttribute('hotel-id');
+  const editFormHolder = listEl.querySelector('.edit-form-holder');
+
+  try {
+      if (!listEl.classList.contains('edit-active')) {
+          const hotelInfo = await getHotelInfo(hotelId);
+          const root = createRoot(editFormHolder);
+          root.render(<FormHotel formType="edit" hotelData={hotelInfo} />);
+          listEl.classList.add('edit-active');
+          editFormHolder.classList.add('edit-form-expanded');
+      } else {
+          editFormHolder.classList.toggle('edit-form-expanded');
+      }
+  } catch (error) {
+      console.error("Failed to fetch hotel info:", error);
+  }
+}
 
 function ListEl(props) {
   return (
@@ -20,7 +42,7 @@ function ListEl(props) {
             ))}
         </div>
         <div className="col-12 col-md-2 d-flex flex-column gap-1">
-          <Button />
+          <Button onClickAction={editHotel} text="edit" />
         </div>
       </div>
       <div className="row hidden edit-form-holder"></div>

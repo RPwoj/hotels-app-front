@@ -11,3 +11,24 @@ export async function getHotels() {
       return null;
     }
   }
+
+export async function getHotelInfo(hotelId) {
+  try {
+    const res = await axios.get(baseUrl + "/hotels/" + hotelId);
+    console.log(res);
+    return res.data;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
+export async function getAmenities() {
+  try {
+    const res = await axios.get(baseUrl + "/amenities");
+    return res.data.member;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}

@@ -47,3 +47,15 @@
     aspect-ratio: 1;
     background: #707070;
 }
+
+
+
+/*  */
+
+.checkbox > label {
+    display: block;
+}
+
+.checkbox > label > input {
+    margin-right: .5rem;
+}
