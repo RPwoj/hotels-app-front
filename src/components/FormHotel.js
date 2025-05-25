@@ -1,5 +1,5 @@
 import Checkbox from "./Checkbox.js";
-import { getAmenities, createHotel } from "../api/HotelApi.js";
+import { getAmenities, createHotel, editHotel } from "../api/HotelApi.js";
 import { useState, useEffect } from 'react';
 import Button from "./Button.js";
 
@@ -16,6 +16,15 @@ function FormHotel(props) {
         fetchAmenities();
     }, []);
 
+    if (props.hotelData) {
+        allAmenities.forEach(amenity => {
+            const match = props.hotelData.amenities.find(amenityChecked => amenityChecked.name === amenity.name);
+            if (match) {
+                amenity.checked = true;
+            }
+        });
+    }
+
     function btnText(formType) {
         let text = 'Click';
 
@@ -31,21 +40,18 @@ function FormHotel(props) {
 
         return text;
     }
-    
-    if (props.hotelData) {
-        allAmenities.forEach(amenity => {
-            const match = props.hotelData.amenities.find(amenityChecked => amenityChecked.name === amenity.name);
-            if (match) {
-                amenity.checked = true;
-            }
-        });
-    }
 
-    function getFormData(targetButton) {
+
+    function getFormData(formType, targetButton) {
         const form = targetButton.closest('.hotel-form');
         const hotelNameInput = form.querySelector('input[type="text"]');
         const checkboxes = form.querySelectorAll('.checkbox input');
         let amenities = [];
+        let hotelFormId = null;
+
+        if (formType == 'edit') {
+            hotelFormId = form.closest('.hotels-list-el').getAttribute('hotel-id');
+        }
 
         checkboxes.forEach(checkbox => {
             if (checkbox.checked) {
@@ -53,21 +59,24 @@ function FormHotel(props) {
             }
         })
 
-        return {
-            name: hotelNameInput.value,
-            amenities: amenities
-        }
+        let result = {};
+
+        if (hotelFormId) result.hotelId = hotelFormId;
+        if (hotelNameInput.value) result.name = hotelNameInput.value;
+        if (amenities.length > 0) result.amenities = amenities;
+
+        return result;
     }
 
     function buttonFormAction(clickedButton, formType) {
-        const formData = getFormData(clickedButton);
+        const formData = getFormData(formType, clickedButton);
         switch(formType) {
             case 'create':
                 createHotel(formData);
                 break;
 
             case 'edit':
-                console.log('edit');
+                editHotel(formData);
                 break;
         }
     }

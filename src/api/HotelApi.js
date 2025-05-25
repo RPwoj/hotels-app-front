@@ -24,11 +24,36 @@ export async function getHotelInfo(hotelId) {
 }
 
 export async function createHotel(data) {
+  // console.log('-----create-----');
+  // console.log(data);
+  // console.log('-----create-----');
+
   try {
     const res = await axios.post(baseUrl + "/hotels", data,
       {
         headers: {
           "Content-Type": "application/ld+json",
+        }
+      }
+    );
+    console.log(res);
+    return res.data;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
+export async function editHotel(data) {
+  // console.log('-----edit-----');
+  // console.log(data);
+  // console.log('-----edit-----');
+
+  try {
+    const res = await axios.patch(baseUrl + "/hotels/" + data.hotelId, data,
+      {
+        headers: {
+          "Content-Type": "application/merge-patch+json",
         }
       }
     );
