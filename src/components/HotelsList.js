@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import Label from "./Label.js";
 import Button from "./Button.js";
 import FormHotel from "./FormHotel.js";
-import { getHotelInfo } from "../api/HotelApi.js";
+import { getHotelInfo, deleteHotel } from "../api/HotelApi.js";
 import { createRoot } from 'react-dom/client';
 
 async function editHotel(e) {
@@ -26,6 +26,17 @@ async function editHotel(e) {
   }
 }
 
+async function removeHotel(e) {
+  const listEl = e.target.closest('.hotels-list-el');
+  const hotelId = listEl.getAttribute('hotel-id');
+
+  try {
+      await deleteHotel(hotelId);
+  } catch (error) {
+      console.error("Failed to fetch hotel info:", error);
+  }
+}
+
 function ListEl(props) {
   return (
     <div hotel-id={props.id} className="hotels-list-el">
@@ -43,6 +54,7 @@ function ListEl(props) {
         </div>
         <div className="col-12 col-md-2 d-flex flex-column gap-1">
           <Button onClickAction={editHotel} text="edit" />
+          <Button onClickAction={removeHotel} text="delete" />
         </div>
       </div>
       <div className="row hidden edit-form-holder"></div>
@@ -62,7 +74,6 @@ function HotelsList() {
   useEffect(() => {
       refreshData();
   }, []);
-  
 
   return (
     <div className="hotels-list d-flex flex-column gap-2">

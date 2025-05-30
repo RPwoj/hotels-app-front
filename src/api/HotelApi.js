@@ -65,6 +65,21 @@ export async function editHotel(data) {
   }
 }
 
+export async function deleteHotel(id) {
+  // console.log('-----edit-----');
+  // console.log(id);
+  // console.log('-----edit-----');
+
+  try {
+    const res = await axios.delete(baseUrl + "/hotels/" + id);
+    console.log(res);
+    return res.data;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
 export async function getAmenities() {
   try {
     const res = await axios.get(baseUrl + "/amenities");
