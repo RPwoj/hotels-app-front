@@ -1,7 +1,5 @@
 function Checkbox(props) {
 
-    console.log(props); 
-
     return (
         <div className="checkbox d-block" >
             <label>

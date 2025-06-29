@@ -2,10 +2,12 @@ import Checkbox from "./Checkbox.js";
 import { getAmenities, createHotel, editHotel } from "../api/HotelApi.js";
 import { useState, useEffect } from 'react';
 import Button from "./Button.js";
-
+import Form from 'react-bootstrap/Form';
+import Col from 'react-bootstrap/Col';
 
 function FormHotel(props) {
     const [allAmenities, setAmenities] = useState([]);
+    const [errorMessage, setErrorMessage] = useState([]);
 
     useEffect(() => {
         async function fetchAmenities() {
@@ -41,6 +43,39 @@ function FormHotel(props) {
         return text;
     }
 
+    function headingText(formType) {
+        let text = 'Click';
+
+        switch(formType) {
+            case 'create':
+                text = 'Create new hotel';
+                break;
+
+            case 'edit':
+                text = 'Update hotel data';
+                break;
+        }
+
+        return text;
+    }
+
+    
+    function classes(formType) {
+        let classes = 'form-horizontal hotel-form d-flex flex-column gap-3 ';
+
+        switch(formType) {
+            case 'create':
+                classes += 'form-create border p-3 mb-3 rounded m-2';
+                break;
+
+            case 'edit':
+                classes += 'form-edit';
+                break;
+        }
+
+        return classes;
+    }
+
 
     function getFormData(formType, targetButton) {
         const form = targetButton.closest('.hotel-form');
@@ -68,11 +103,26 @@ function FormHotel(props) {
         return result;
     }
 
-    function buttonFormAction(clickedButton, formType) {
+    function clearForm() {
+        const form = document.querySelector('.hotel-form.form-create');
+        const hotelNameInput = form.querySelector('#hotelName');
+        const checkboxes = form.querySelectorAll('.checkbox input');
+        hotelNameInput.value = '';
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        })
+    }
+
+    async function buttonFormAction(clickedButton, formType) {
         const formData = getFormData(formType, clickedButton);
         switch(formType) {
             case 'create':
-                createHotel(formData);
+                const res = await createHotel(formData);
+                setErrorMessage(res.detail);
+                if (res['@type'] != 'Error') {
+                    clearForm();
+                }
+
                 break;
 
             case 'edit':
@@ -82,26 +132,30 @@ function FormHotel(props) {
     }
 
     return (
-        <form className="form-horizontal hotel-form">
-            <div className="form-group hotel-name-holder">
-                <label htmlFor="hotelName" className="col-sm-2 control-label">Hotel name</label>
-                <div className="col-sm-10">
+        <Form className={classes(props.formType)}>
+            <div className="form-heading">
+                <h4>{headingText(props.formType)}</h4>
+            </div>
+            <Form.Group className="hotel-name-holder">
+                <label htmlFor="hotelName" className="control-label">Hotel name</label>
+                <Col sm="8">
                     <input type="text" className="form-control" id="hotelName" defaultValue={props.hotelData ? props.hotelData.name : ""} />
-                </div>
-            </div>
-            <div className="form-group amenities-holder d-flex flex-wrap">
+                </Col>
+            </Form.Group>
+            <Form.Group className="amenities-holder d-flex flex-wrap">
                 {allAmenities.map(amenity => (
-                    <div className="col-sm-offset-2 col-sm-3" key={amenity['id']}>
+                    <Col xs="6" key={amenity['id']}>
                         <Checkbox amenityId={amenity['@id']} name={amenity['name']} checked={amenity['checked'] || false} />
-                    </div>
+                    </Col>
                 ))}
-            </div>
-            <div className="form-group">
-                <div className="col-sm-offset-2 col-sm-10">
-                    <Button onClickAction={(e) => {buttonFormAction(e.target, props.formType)}} text={btnText(props.formType)} />
-                </div>
-            </div>
-        </form>
+            </Form.Group>
+            <Form.Group>
+                <Col sm="10">
+                    <Button onClickAction={(e) => {buttonFormAction(e.target, props.formType); if (props.refreshFn) props.refreshFn();}} text={btnText(props.formType)} />
+                </Col>
+                <Col className="form-error-handler">{errorMessage}</Col>
+            </Form.Group>
+        </Form>
     )
 }
 

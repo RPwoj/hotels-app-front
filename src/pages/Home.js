@@ -1,20 +1,32 @@
+import { useState, useEffect } from 'react';
 import HotelsList from "../components/HotelsList.js";
 import FormHotel from "../components/FormHotel.js";
+import Container from 'react-bootstrap/Container';
+import { getHotels } from "../api/HotelApi.js";
+
 
 function Home() {
-  return (
-    <>
-      <header className="App-header">
-        <h1>Home page</h1>
-      </header>
+  const [data, setData] = useState([]);
 
-      <FormHotel formType="create"/>
-      <section>
-        <div className="container">
-          <HotelsList />
-        </div>
-      </section>
-    </>
+  async function refreshData() {
+      const hotels = await getHotels();
+      setData(hotels);
+      // console.log(hotels);
+      return data
+  }
+
+  useEffect(() => {
+      refreshData();
+  }, []);
+
+
+  return (
+    <section>
+      <Container>
+        <FormHotel formType="create" refreshFn={refreshData}/>
+        <HotelsList data={data} refreshFn={refreshData}/>
+      </Container>
+    </section>
   );
 }
 

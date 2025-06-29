@@ -6,6 +6,9 @@ import FormHotel from "./FormHotel.js";
 import { getHotelInfo, deleteHotel } from "../api/HotelApi.js";
 import { createRoot } from 'react-dom/client';
 
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
+
 async function editHotel(e) {
   const listEl = e.target.closest('.hotels-list-el');
   const hotelId = listEl.getAttribute('hotel-id');
@@ -26,59 +29,77 @@ async function editHotel(e) {
   }
 }
 
-async function removeHotel(e) {
+async function removeHotel(e, refreshFn) {
   const listEl = e.target.closest('.hotels-list-el');
   const hotelId = listEl.getAttribute('hotel-id');
 
   try {
       await deleteHotel(hotelId);
+      refreshFn();
   } catch (error) {
       console.error("Failed to fetch hotel info:", error);
   }
 }
 
 function ListEl(props) {
+
   return (
-    <div hotel-id={props.id} className="hotels-list-el">
-      <div className="row d-flex flex-column flex-md-row p-3 gap-1 rounded shadow-sm">
-        <div className="col-md-auto">
-          <div className="img-placeholder"></div>
-        </div>
-        <div className="col">
-          <h4 className="font-weight-bold">{props.name}</h4>
-        </div>
-        <div className="col d-flex align-items-center flex-wrap gap-1">
-          {props.amenities.map(amenity => (
+    <Col sm="6" xs="12">
+      <div hotel-id={props.id} className="hotels-list-el d-flex flex-column p-3 rounded shadow-sm m-2">
+        <Row className="d-flex flex-column gap-3">
+          <Col xs="12">
+            <div className="img-placeholder"></div>
+          </Col>
+          <Col>
+            <h3 className="font-weight-bold">{props.name}</h3>
+          </Col>
+          <Col className="d-flex align-items-center flex-wrap gap-1">
+            {props.amenities.map(amenity => (
               <Label text={amenity['name']} key={amenity['id']}/>
-            ))}
-        </div>
-        <div className="col-12 col-md-2 d-flex flex-column gap-1">
-          <Button onClickAction={editHotel} text="edit" />
-          <Button onClickAction={removeHotel} text="delete" />
-        </div>
+              ))}
+          </Col>
+          <Col md="2" className="d-flex align-items-center gap-1">
+            <Button onClickAction={editHotel} text="edit" />
+            <Button onClickAction={(e) => removeHotel(e, props.refreshFn)} text="delete" />  
+          </Col>
+        </Row>
+        <Row className="edit-form-holder pt-3"></Row>
       </div>
-      <div className="row hidden edit-form-holder"></div>
-    </div>
+    </Col>
   )
 }
 
-function HotelsList() {
+function HotelsList(props) {
   const [data, setData] = useState([]);
 
-  async function refreshData() {
-      const hotels = await getHotels();
-      setData(hotels);
-      console.log(hotels);
-  }
+  // async function refreshData() {
+  //     const hotels = await getHotels();
+  //     setData(hotels);
+  //     console.log(hotels);
+  // }
 
   useEffect(() => {
-      refreshData();
-  }, []);
+    async function loadData() {
+      if (props.refreshFn) {
+        const hotels = await props.refreshFn();
+        setData(hotels);
+        return data;
+      }
+    }
 
+    loadData();
+  }, []); // include it in deps in case it changes
+
+  // useEffect(() => {
+  //     props.refreshFn;
+  //     // refreshData();
+  // }, []);
+
+  // there is problem
   return (
-    <div className="hotels-list d-flex flex-column gap-2">
-         {data.map(hotel => (
-          <ListEl name={hotel['name']} id={hotel['id']} amenities={hotel['amenities']} key={hotel['id']} />
+    <div className="hotels-list d-flex flex-wrap">
+         {props.data.map(hotel => (
+          <ListEl name={hotel['name']} id={hotel['id']} amenities={hotel['amenities']} refreshFn={props.refreshFn} key={hotel['id']} />
         ))}
     </div>
   );

@@ -1,6 +1,9 @@
+import ButtonBootstrap from 'react-bootstrap/Button';
+
 function Button(props) {
+    // console.log(props.onClickAction);
     return (
-        <span className="btn btn-primary" onClick={props.onClickAction}>{props.text}</span>
+        <ButtonBootstrap variant="outline-dark" onClick={props.onClickAction}>{props.text}</ButtonBootstrap>
     )
 }
 

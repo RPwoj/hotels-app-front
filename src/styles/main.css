@@ -1,3 +1,8 @@
+.container {
+    max-width: 900px !important;
+}
+
+
 .hotels-list {
     max-width: 900px;
     margin: 0 auto;
@@ -29,8 +34,13 @@
     visibility: hidden;
     max-height: 0;
     overflow: hidden;
-    transition: max-height .3s ease, opacity .3s ease, visibility .3s ease;
+    transition: max-height .3s ease, opacity .3s ease, visibility .3s ease, padding .3s ease;
 }
+
+.edit-form-holder:not(.edit-form-expanded) {
+    padding: 0 !important;
+}
+
 
 .edit-form-expanded {
     opacity: 1 !important;
@@ -43,7 +53,6 @@
 /*  */
 
 .img-placeholder {
-    width: 7.5rem;
     aspect-ratio: 1;
     background: #707070;
 }
@@ -58,4 +67,59 @@
 
 .checkbox > label > input {
     margin-right: .5rem;
+}
+
+
+.edit-form-holder {
+    padding-top: 3rem !important;
+}
+
+.hotel-form {
+    position: relative;
+}
+
+.hotel-form.form-edit:before {
+    content: '';
+    height: 1px;
+    width: calc(100% - 1.5rem);
+    position: absolute;
+    top: -1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #222222;
+}
+
+
+@media (max-width: 767px) {
+    .hotels-list-el {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+
+    .hotels-list-el > .row {
+        gap: .75rem !important;
+    }
+
+    .hotels-list-el > .row > * {
+        display: flex;
+        justify-content: center;
+    }
+
+    .amenities-holder > * {
+        width: 50%;
+    }
+
+    .img-placeholder {
+        width: 100%;
+        max-width: 15rem;
+    }
+}
+
+
+.hidden {
+    display: none;
+}
+
+.modal.show {
+    display: block;
 }

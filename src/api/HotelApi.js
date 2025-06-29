@@ -15,7 +15,7 @@ export async function getHotels() {
 export async function getHotelInfo(hotelId) {
   try {
     const res = await axios.get(baseUrl + "/hotels/" + hotelId);
-    console.log(res);
+    // console.log(res);
     return res.data;
   } catch (err) {
     console.error(err);
@@ -36,11 +36,11 @@ export async function createHotel(data) {
         }
       }
     );
-    console.log(res);
+    // console.log(res);
     return res.data;
   } catch (err) {
-    console.error(err);
-    return null;
+    // console.error(err.response.data.detail);
+    return err.response.data;
   }
 }
 
@@ -66,9 +66,9 @@ export async function editHotel(data) {
 }
 
 export async function deleteHotel(id) {
-  // console.log('-----edit-----');
-  // console.log(id);
-  // console.log('-----edit-----');
+  // console.log('-----delete-----');
+  console.log(id);
+  // console.log('-----delete-----');
 
   try {
     const res = await axios.delete(baseUrl + "/hotels/" + id);
@@ -83,6 +83,7 @@ export async function deleteHotel(id) {
 export async function getAmenities() {
   try {
     const res = await axios.get(baseUrl + "/amenities");
+    console.log(res.data);
     return res.data.member;
   } catch (err) {
     console.error(err);
