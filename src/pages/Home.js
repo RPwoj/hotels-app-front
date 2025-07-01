@@ -4,21 +4,17 @@ import FormHotel from "../components/FormHotel.js";
 import Container from 'react-bootstrap/Container';
 import { getHotels } from "../api/HotelApi.js";
 
-
 function Home() {
   const [data, setData] = useState([]);
 
   async function refreshData() {
       const hotels = await getHotels();
       setData(hotels);
-      // console.log(hotels);
-      return data
   }
 
   useEffect(() => {
       refreshData();
   }, []);
-
 
   return (
     <section>

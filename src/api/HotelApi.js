@@ -1,7 +1,6 @@
 import axios from "axios";
 const baseUrl = "http://127.0.0.1:8000/api";
 
-
 export async function getHotels() {
     try {
       const res = await axios.get(baseUrl + "/hotels");
@@ -15,7 +14,6 @@ export async function getHotels() {
 export async function getHotelInfo(hotelId) {
   try {
     const res = await axios.get(baseUrl + "/hotels/" + hotelId);
-    // console.log(res);
     return res.data;
   } catch (err) {
     console.error(err);
@@ -24,10 +22,6 @@ export async function getHotelInfo(hotelId) {
 }
 
 export async function createHotel(data) {
-  // console.log('-----create-----');
-  // console.log(data);
-  // console.log('-----create-----');
-
   try {
     const res = await axios.post(baseUrl + "/hotels", data,
       {
@@ -36,19 +30,13 @@ export async function createHotel(data) {
         }
       }
     );
-    // console.log(res);
     return res.data;
   } catch (err) {
-    // console.error(err.response.data.detail);
     return err.response.data;
   }
 }
 
 export async function editHotel(data) {
-  // console.log('-----edit-----');
-  // console.log(data);
-  // console.log('-----edit-----');
-
   try {
     const res = await axios.patch(baseUrl + "/hotels/" + data.hotelId, data,
       {
@@ -57,7 +45,6 @@ export async function editHotel(data) {
         }
       }
     );
-    console.log(res);
     return res.data;
   } catch (err) {
     console.error(err);
@@ -66,13 +53,8 @@ export async function editHotel(data) {
 }
 
 export async function deleteHotel(id) {
-  // console.log('-----delete-----');
-  console.log(id);
-  // console.log('-----delete-----');
-
   try {
     const res = await axios.delete(baseUrl + "/hotels/" + id);
-    console.log(res);
     return res.data;
   } catch (err) {
     console.error(err);
@@ -83,7 +65,6 @@ export async function deleteHotel(id) {
 export async function getAmenities() {
   try {
     const res = await axios.get(baseUrl + "/amenities");
-    console.log(res.data);
     return res.data.member;
   } catch (err) {
     console.error(err);

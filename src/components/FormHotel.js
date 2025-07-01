@@ -81,10 +81,11 @@ function FormHotel(props) {
         const form = targetButton.closest('.hotel-form');
         const hotelNameInput = form.querySelector('input[type="text"]');
         const checkboxes = form.querySelectorAll('.checkbox input');
+
         let amenities = [];
         let hotelFormId = null;
 
-        if (formType == 'edit') {
+        if (formType === 'edit') {
             hotelFormId = form.closest('.hotels-list-el').getAttribute('hotel-id');
         }
 
@@ -107,41 +108,53 @@ function FormHotel(props) {
         const form = document.querySelector('.hotel-form.form-create');
         const hotelNameInput = form.querySelector('#hotelName');
         const checkboxes = form.querySelectorAll('.checkbox input');
+
         hotelNameInput.value = '';
         checkboxes.forEach(checkbox => {
             checkbox.checked = false;
         })
+
+        setErrorMessage('');
     }
 
     async function buttonFormAction(clickedButton, formType) {
         const formData = getFormData(formType, clickedButton);
+        const errorHandler = document.querySelector('.form-error-handler');
+        const editFormHolder = clickedButton.closest('.edit-form-holder');
+
         switch(formType) {
             case 'create':
                 const res = await createHotel(formData);
-                setErrorMessage(res.detail);
-                if (res['@type'] != 'Error') {
-                    clearForm();
-                }
+
+                (res['@type'] != 'Error') ? clearForm() : setErrorMessage(res.detail);
+
+                ['alert', 'alert-warning', 'mt-3'].forEach(cls =>
+                    errorHandler.classList.toggle(cls, res['@type'] === 'Error')
+                );
 
                 break;
 
             case 'edit':
                 editHotel(formData);
+                if (editFormHolder.classList.contains('edit-form-expanded')) editFormHolder.classList.remove('edit-form-expanded');
                 break;
         }
     }
 
     return (
         <Form className={classes(props.formType)}>
+
             <div className="form-heading">
                 <h4>{headingText(props.formType)}</h4>
             </div>
+
             <Form.Group className="hotel-name-holder">
                 <label htmlFor="hotelName" className="control-label">Hotel name</label>
                 <Col sm="8">
                     <input type="text" className="form-control" id="hotelName" defaultValue={props.hotelData ? props.hotelData.name : ""} />
                 </Col>
             </Form.Group>
+
             <Form.Group className="amenities-holder d-flex flex-wrap">
                 {allAmenities.map(amenity => (
                     <Col xs="6" key={amenity['id']}>
@@ -149,12 +162,14 @@ function FormHotel(props) {
                     </Col>
                 ))}
             </Form.Group>
+
             <Form.Group>
                 <Col sm="10">
                     <Button onClickAction={(e) => {buttonFormAction(e.target, props.formType); if (props.refreshFn) props.refreshFn();}} text={btnText(props.formType)} />
                 </Col>
                 <Col className="form-error-handler">{errorMessage}</Col>
             </Form.Group>
+
         </Form>
     )
 }
