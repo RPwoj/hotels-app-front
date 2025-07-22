@@ -115,6 +115,7 @@ function FormHotel(props) {
         })
 
         setErrorMessage('');
+        props.refreshFn();
     }
 
     async function buttonFormAction(clickedButton, formType) {
@@ -135,8 +136,9 @@ function FormHotel(props) {
                 break;
 
             case 'edit':
-                editHotel(formData);
+                await editHotel(formData);
                 if (editFormHolder.classList.contains('edit-form-expanded')) editFormHolder.classList.remove('edit-form-expanded');
+                await props.refreshFn();
                 break;
         }
     }
@@ -165,7 +167,7 @@ function FormHotel(props) {
 
             <Form.Group>
                 <Col sm="10">
-                    <Button onClickAction={(e) => {buttonFormAction(e.target, props.formType); if (props.refreshFn) props.refreshFn();}} text={btnText(props.formType)} />
+                    <Button onClickAction={(e) => {buttonFormAction(e.target, props.formType)}} text={btnText(props.formType)} />
                 </Col>
                 <Col className="form-error-handler">{errorMessage}</Col>
             </Form.Group>

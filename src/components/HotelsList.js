@@ -77,20 +77,6 @@ function ListEl(props) {
 }
 
 function HotelsList(props) {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    async function loadData() {
-      if (props.refreshFn) {
-        const hotels = await props.refreshFn();
-        setData(hotels);
-        return data;
-      }
-    }
-
-    loadData();
-  }, []);
-
   return (
     <div className="hotels-list d-flex flex-wrap">
          {props.data.map(hotel => (
