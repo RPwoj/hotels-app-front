@@ -98,8 +98,8 @@ function FormHotel(props) {
         let result = {};
 
         if (hotelFormId) result.hotelId = hotelFormId;
-        if (hotelNameInput.value) result.name = hotelNameInput.value;
-        if (amenities.length > 0) result.amenities = amenities;
+        result.name = hotelNameInput.value;
+        result.amenities = amenities;
 
         return result;
     }
