@@ -136,8 +136,22 @@ function FormHotel(props) {
                 break;
 
             case 'edit':
-                await editHotel(formData);
-                if (editFormHolder.classList.contains('edit-form-expanded')) editFormHolder.classList.remove('edit-form-expanded');
+                const editFormErrorHandler = editFormHolder.querySelector('.form-error-handler');
+                const editResponse = await editHotel(formData);
+
+                if (editFormHolder.classList.contains('edit-form-expanded') && editResponse['@id']) {
+                    editFormHolder.classList.remove('edit-form-expanded');
+
+                    setTimeout(() => {
+                        editFormErrorHandler.setAttribute('class', 'form-error-handler');
+                        setErrorMessage();
+                    }, 500);
+
+                } else {
+                    setErrorMessage(editResponse.response.data.description);
+                    editFormErrorHandler.setAttribute('class', 'form-error-handler alert alert-warning mt-3');
+                }
+
                 await props.refreshFn();
                 break;
         }

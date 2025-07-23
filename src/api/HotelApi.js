@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseUrl = "https://hotels-api.ytq.pl/api";
+const baseUrl = "http://127.0.0.1:8000/api";
 
 export async function getHotels() {
     try {
@@ -48,7 +48,7 @@ export async function editHotel(data) {
     return res.data;
   } catch (err) {
     console.error(err);
-    return null;
+    return err;
   }
 }
 
