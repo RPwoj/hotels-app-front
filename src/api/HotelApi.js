@@ -30,9 +30,10 @@ export async function createHotel(data) {
         }
       }
     );
-    return res.data;
+    return res;
   } catch (err) {
-    return err.response.data;
+    console.log(err);
+    return err;
   }
 }
 
@@ -45,7 +46,7 @@ export async function editHotel(data) {
         }
       }
     );
-    return res.data;
+    return res;
   } catch (err) {
     console.error(err);
     return err;

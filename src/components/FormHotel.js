@@ -114,7 +114,7 @@ function FormHotel(props) {
             checkbox.checked = false;
         })
 
-        setErrorMessage('');
+        setErrorMessage();
         props.refreshFn();
     }
 
@@ -125,31 +125,31 @@ function FormHotel(props) {
 
         switch(formType) {
             case 'create':
-                const res = await createHotel(formData);
+                const createHotelResponse = await createHotel(formData);
 
-                (res['@type'] != 'Error') ? clearForm() : setErrorMessage(res.detail);
+                (createHotelResponse.status.toString()[0] === '2') ? clearForm() : setErrorMessage(createHotelResponse.response.data.description);
 
                 ['alert', 'alert-warning', 'mt-3'].forEach(cls =>
-                    errorHandler.classList.toggle(cls, res['@type'] === 'Error')
+                    errorHandler.classList.toggle(cls, createHotelResponse.status.toString()[0] !== '2')
                 );
 
                 break;
 
             case 'edit':
                 const editFormErrorHandler = editFormHolder.querySelector('.form-error-handler');
-                const editResponse = await editHotel(formData);
+                const editHotelResponse = await editHotel(formData);
 
-                if (editFormHolder.classList.contains('edit-form-expanded') && editResponse['@id']) {
+                if (editFormHolder.classList.contains('edit-form-expanded') && editHotelResponse.status.toString()[0] === '2') {
                     editFormHolder.classList.remove('edit-form-expanded');
 
                     setTimeout(() => {
-                        editFormErrorHandler.setAttribute('class', 'form-error-handler');
+                        editFormErrorHandler.classList.remove("alert", "alert-warning", "mt-3");
                         setErrorMessage();
                     }, 500);
 
                 } else {
-                    setErrorMessage(editResponse.response.data.description);
-                    editFormErrorHandler.setAttribute('class', 'form-error-handler alert alert-warning mt-3');
+                    setErrorMessage(editHotelResponse.response.data.description);
+                    editFormErrorHandler.classList.add("alert", "alert-warning", "mt-3");
                 }
 
                 await props.refreshFn();
