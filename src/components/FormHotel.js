@@ -127,7 +127,13 @@ function FormHotel(props) {
             case 'create':
                 const createHotelResponse = await createHotel(formData);
 
-                (createHotelResponse.status.toString()[0] === '2') ? clearForm() : setErrorMessage(createHotelResponse.response.data.description);
+                if (createHotelResponse.status.toString()[0] === '2') {
+                    clearForm(); 
+                } else {
+                    let errorMsg = createHotelResponse.response.data.description;
+                    if (errorMsg.indexOf(':') != -1) errorMsg = errorMsg.split(":").slice(1).join(":").trim();
+                    setErrorMessage(errorMsg);
+                }
 
                 ['alert', 'alert-warning', 'mt-3'].forEach(cls =>
                     errorHandler.classList.toggle(cls, createHotelResponse.status.toString()[0] !== '2')
@@ -148,7 +154,9 @@ function FormHotel(props) {
                     }, 500);
 
                 } else {
-                    setErrorMessage(editHotelResponse.response.data.description);
+                    let errorMsg = editHotelResponse.response.data.description;
+                    errorMsg = errorMsg.split(":").slice(1).join(":").trim();
+                    setErrorMessage(errorMsg);
                     editFormErrorHandler.classList.add("alert", "alert-warning", "mt-3");
                 }
 
